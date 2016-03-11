@@ -8,12 +8,19 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Diagnostics;
 using edu.stanford.nlp.ie.crf;
+using FuzzyString;
 
 namespace GoogleGeocoding
 {
     class Program
     {
         static void Main(string[] args)
+        {
+
+            
+        }
+
+        public void Test ()
         {
             string addsFilePath = @"C:\Users\moreaus\Desktop\Dev\adds.csv";
             string[] lines = File.ReadAllLines(addsFilePath, Encoding.GetEncoding("iso-8859-1"));
@@ -23,18 +30,22 @@ namespace GoogleGeocoding
             string classifiersDirecrory = jarRoot + @"\classifiers";
 
             // Loading 3 class classifier model
-            CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions(classifiersDirecrory + @"\english.all.3class.distsim.crf.ser.gz");
+            //CRFClassifier classifier = CRFClassifier.getClassifierNoExceptions(classifiersDirecrory + @"\english.all.3class.distsim.crf.ser.gz");
 
             foreach (string line in lines)
             {
-                string description = line.Split(';')[1];
+                string description = line.Split(';')[0];
 
-                var classified = classifier.classifyToCharacterOffsets(description).toArray();
+                //var classified = classifier.classifyToCharacterOffsets(description).toArray();
 
                 //for (int i = 0; i < classified.Length; i++)
                 //{
 
                 //}
+                List<FuzzyStringComparisonOptions> opts = new List<FuzzyStringComparisonOptions>();
+                opts.Add(FuzzyStringComparisonOptions.UseLevenshteinDistance);
+
+                Debug.WriteLine(FuzzyString.ComparisonMetrics.ApproximatelyEquals(description, "Rue Saint Honoré", opts, FuzzyStringComparisonTolerance.Normal));
 
                 //var s1 = "Good afternoon Rajat Raina, how are you today?";
                 //Debug.WriteLine("{0}\n", classifier.classifyToString(s1));
@@ -44,7 +55,7 @@ namespace GoogleGeocoding
 
                 //Debug.WriteLine("{0}\n", classifier.classifyToString(s2, "xml", true));
 
-                string zipCode = line.Split(';')[4];
+                //string zipCode = line.Split(';')[4];
                 //GeocodingResponses responses = new GeocodingResponses(zipCode + " - " + Description);
                 //if (responses.results.Count != 0)
                 //{
@@ -54,12 +65,10 @@ namespace GoogleGeocoding
                 //{
                 //    Debug.WriteLine(responses.status);
                 //}
-                
-                //System.Threading.Thread.Sleep(100);
-            } 
-           // string address = "123 something st, somewhere";
-            
-        }
 
+                //System.Threading.Thread.Sleep(100);
+            }
+            // string address = "123 something st, somewhere";
+        }
     }
 }
